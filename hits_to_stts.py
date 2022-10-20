@@ -59,6 +59,8 @@ hits_to_stts = {
     'ADJA':'ADJA',
     'VMINF': 'VMINF',
     'ADJD' : 'ADJD',
+    'PRF':'PRF',
+    'CARD':'CARD',
     #externe
     'PW' : 'PWS',
     'PI'  : 'PIS',
@@ -87,7 +89,7 @@ def convert(pos):
 # Diese Mapping-Funktion können Sie in anderen Programmen verwenden:
 def map_tag(tag):
     # Mehrdeutige Merkmale durch * ersetzen
-    tag = tag.replace("Masc,Neut", "*").replace("Fem,Masc", "*").replace("Fem,Neut", "*").replace("Masc,Fem","*")
+    tag = tag.replace("Masc,Neut", "*").replace("Fem,Masc", "*").replace("Fem,Neut", "*").replace("Masc,Fem","*").replace('VVINF', 'VVINF.Inf').replace('VMINF','VMINF.Inf').replace('VAPP', 'VAPP.Psp')
     # ADVERB
     match = re.match(r'(AVG)', tag)
     if match:
@@ -102,14 +104,21 @@ def map_tag(tag):
         return '.'.join(filter(lambda x : x, [convert(pos), degree, case, number, gender]))
         
     # Nomen
-    match = re.match(r'(NA|CARDD|CARDA|CARDN|CARDS|DDA|DDART|DDD|DDN|DDS|DGA|DGS|DIA|DIART|DID|DIN|DIS|DPOSA|DPOSN|DPOSS|DRELS|DWA|DWD|DWS|NA|NE|PG|PI|PW)\.?(Masc|Fem|Neut|\*)?\.?(Nom|Gen|Dat|Akk|\*)?\.?(Sg|Pl|\*)?\.?(st|wk|\*)?', tag)
+    match = re.match(r'(DPOSD|NA|CARDD|CARDA|CARDN|CARDS|DDA|DDART|DDD|DDN|DDS|DGA|DGS|DIA|DIART|DID|DIN|DIS|DPOSA|DPOSN|DPOSS|DRELS|DWA|DWD|DWS|NA|NE|PG|PI|PW)\.?(Masc|Fem|Neut|\*)?\.?(Nom|Gen|Dat|Akk|\*)?\.?(Sg|Pl|\*)?\.?(st|wk|\*)?', tag)
     if match:
         pos, gender, case, number, strength = match.group(1,2,3,4,5)
         if case == 'Akk':
             case = 'Acc'
         return '.'.join(filter(lambda x : x, [convert(pos), case, number, gender]))
+    # CARD
+    match = re.match(r'(CARD)\.?(Masc|Fem|Neut|\*)?\.?(Nom|Gen|Dat|Akk|\*)?\.?(Sg|Pl|\*)?\.?(st|wk|\*)?', tag)
+    if match:
+        pos, gender, case, number, strength = match.group(1,2,3,4,5)
+        if case == 'Akk':
+            case = 'Acc'
+        return '.'.join(filter(lambda x : x, [convert(pos)]))
     # PPER
-    match = re.match(r'(PPER)\.?(Masc|Fem|Neut|\*)?\.?(Nom|Gen|Dat|Akk|\*)?\.?(Sg|Pl|\*)?\.?(st|wk|\*)?(1|2|3|\*)?', tag)
+    match = re.match(r'(PPER|PRF)\.?(Masc|Fem|Neut|\*)?\.?(Nom|Gen|Dat|Akk|\*)?\.?(Sg|Pl|\*)?\.?(st|wk|\*)?(1|2|3|\*)?', tag)
     if match:
         pos, gender, case, number, strength, person = match.group(1,2,3,4,5,6)
         if case == 'Akk':

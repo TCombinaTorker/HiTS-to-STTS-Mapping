@@ -959,3 +959,9 @@ XY
 PDAT.Nom.Pl.*
 PWAT.Acc.Pl.*
 PPER.3.Gen.Pl.Neut
+VMFIN.3.Sg.Past.*
+ADJA.Acc.Pl.Neut
+ADJA.Dat.Sg.Masc
+NE.Gen.Sg
+PPER.3.Gen.Pl.Fem
+VMFIN.2.Sg.Past.Subj
